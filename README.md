@@ -6,7 +6,7 @@
 
 ## 📋 Project Overview
 
-This repository presents a **comprehensive control analysis and comparison** for two-wheeled self-balancing robots, focusing on robust stabilization under uncertainty. The project compares **Linear Quadratic Regulator (LQR)** controllers with **H∞ mixed-sensitivity robust control** approaches through simulation studies and analysis.
+This repository presents a **comprehensive control analysis and comparison** for two-wheeled self-balancing robots, focusing on robust stabilization under uncertainty. The project compares **Linear Quadratic Regulator (LQR)** and **H∞ Mixed-Sensitivity control** designs with extensive MATLAB simulations and analysis.
 
 ### Key Contributions
 
@@ -92,7 +92,36 @@ self-balancing-two-wheeled-robots/
 ├── self_balancing_ieee_report.tex              # IEEE conference-style technical report
 ├── presentation_text.txt                        # Presentation slides content
 │
-├── Analysis/                                    # Analysis outputs directory
+├── Analysis/                                    # Analysis directory with scripts and results
+│   ├── MATLAB SCRIPTS - COMPARATIVE ANALYSIS
+│   │   ├── SELF_BALANCING_COMPARISON.m                  [LQR vs H∞ nominal comparison]
+│   │   ├── SELF_BALANCING_COMPARISON_1INPUT.m           [Single-input common-mode control]
+│   │   ├── SELF_BALANCING_COMPARISON_EXP2.m             [Sinusoidal disturbance rejection]
+│   │   ├── SELF_BALANCING_COMPARISON_EXP3.m             [Parametric uncertainty analysis]
+│   │
+│   ├── MATLAB SCRIPTS - CONTROLLER DESIGN
+│   │   ├── SELF_BAL_LQR_CONTROLLER.m                    [LQR controller synthesis]
+│   │   ├── SELF_BALANCING_LMI_H_INF.m                   [LMI-based H∞ synthesis]
+│   │   ├── SELF_BALANCING_MONTE_CARLO_SIM.m             [10,000 sample robustness validation]
+│   │   ├── mu_synthesis.m                               [Mu-synthesis for robust control]
+│   │   ├── STEERING_LQR_CONTROLLER.m                    [Steering subsystem controller]
+│   │
+│   ├── MATLAB SCRIPTS - NOMINAL MODELS
+│   │   ├── nominal_model_SELF_BAL.m                     [Self-balancing subsystem model]
+│   │   ├── nominal_model_STEERING.m                     [Steering subsystem model]
+│   │
+│   ├── VISUALIZATION - EXPERIMENT RESULTS
+│   │   ├── exp3_input.jpg                               [Input disturbance response]
+│   │   ├── exp3_theta.jpg                               [Wheel angle trajectory]
+│   │   ├── exp3_pitch_rate.jpg                          [Body pitch rate response]
+│   │   ├── exp3_pitch_rate.fig                          [MATLAB figure (editable)]
+│   │   ├── rob_stab_margin.jpg                          [Robust stability margins]
+│   │   ├── weight_unc.jpg                               [Uncertainty weight visualization]
+│   │   ├── worst-case-psi-volt.jpg                      [Worst-case pitch vs voltage]
+│   │   ├── monte-carlo.png                              [Monte Carlo simulation results]
+│   │
+│   └── figures/                                         [Additional analysis figures]
+│
 ├── code/                                        # MATLAB implementation scripts
 ├── lmi/                                         # Linear Matrix Inequality related files
 ├── lqr/                                         # LQR control implementation
@@ -135,68 +164,166 @@ The controller must:
 
 ## 🔬 Experimental Framework
 
-### Experiment 1: Nominal Initial-Condition Response
+### Experiment 1: Nominal Performance Comparison
 
-**Objective:** Baseline comparison of LQR and H∞ controllers without disturbances
+**File:** `Analysis/SELF_BALANCING_COMPARISON.m`
 
-**Initial Condition:**
+**Objective:** Baseline LQR vs H∞ comparison without uncertainties
+
+**Setup:**
+- Initial condition: x₀ = [0, 0.3, 0.1, 0.3]ᵀ
+- No external disturbances
+- 10-second simulation
+
+**LQR Design:**
+```matlab
+Q_lqr = diag([100, 1000, 10, 10])    % State penalties
+R_lqr = eye(2)                         % Control penalty
 ```
-x(0) = [0, 0.1, 0.3, 0.3]ᵀ
+
+**H∞ Mixed-Sensitivity Design:**
+```matlab
+Ms = 2.0      % Max sensitivity peak
+wbs = 5 rad/s % Balancing bandwidth
+Ws = blkdiag(0.1, 5.0, 0.1, 1.0) × Ws_scalar
+Wu = (1/24)×I₂ % Motor voltage constraint
 ```
 
-**Metrics:**
-- Peak pitch angle
-- Peak control input
-- Peak motor voltages
-- Settling time
+**Key Comparison Metrics:**
+| Metric | LQR | H∞ |
+|--------|-----|--------|
+| Pitch regulation | Tighter | Conservative |
+| Peak voltage | Can exceed limits | Bounded ≤ 24V |
+| Control aggression | High | Moderate |
 
-**Expected Results:**
-- LQR: Tighter pitch regulation with aggressive motor commands
-- H∞: More conservative regulation with bounded voltage usage
+**Expected Output:**
+- 6-subplot figure comparing all states and motor inputs
+- LQR typically settles faster but with higher voltage demand
 
 ---
 
-### Experiment 2: Sinusoidal Disturbance Rejection
+### Experiment 2: Single-Input Common-Mode Control
 
-**Objective:** Evaluate disturbance rejection performance
+**File:** `Analysis/SELF_BALANCING_COMPARISON_1INPUT.m`
+
+**Objective:** Constrain motor voltage distribution to equal values
+
+**Control Strategy:**
+```
+v_l = v_r = u_common/2
+```
+
+**Setup:**
+- Same initial condition as Experiment 1
+- Reduced control authority (single scalar input)
+- Maintains system controllability
+
+**Analysis Focus:**
+- Trade-off between stabilization and input constraint
+- Feasibility of symmetric motor control
+
+---
+
+### Experiment 3a: Sinusoidal Disturbance Rejection
+
+**File:** `Analysis/SELF_BALANCING_COMPARISON_EXP2.m`
+
+**Objective:** Evaluate frequency-dependent disturbance rejection
 
 **Disturbance Model:**
 ```
 ẋ = Ax + Bu + Bₐf(t)
 Bₐ = [0, 0, 1, 1]ᵀ
-f(t) = 0.3·sin(t)
+f(t) = 0.3·sin(t) rad/s² [1 rad/s frequency]
 ```
 
-**Analysis Focus:**
-- Response at disturbance frequency
-- Control effort required
-- Pitch tracking robustness
+**Key Insight:**
+H∞ design excels through explicit frequency shaping, while LQR shows sensitivity at disturbance frequency
 
-**Key Insight:** H∞ design emphasizes frequency-dependent performance shaping
+**Visualization Results:**
+
+![Input Disturbance Response](./Analysis/exp3_input.jpg)
+*Figure: Disturbance input signal and system response comparison between LQR and H∞ controllers*
+
+![Wheel Angle Trajectory](./Analysis/exp3_theta.jpg)
+*Figure: Wheel angle (θ) response over time for both controllers*
 
 ---
 
-### Experiment 3: Parametric Uncertainty
+### Experiment 3b: Parametric Uncertainty Analysis
 
-**Objective:** Robustness evaluation under mass and height variations
+**File:** `Analysis/SELF_BALANCING_COMPARISON_EXP3.m` & `Analysis/SELF_BALANCING_LMI_H_INF.m`
 
-**Design Parameters:**
-```
-M₀ = 0.25 kg  (fixed)
-H₀ = 0.17 m   (fixed)
-```
+**Objective:** Robustness under mass and height variations
 
-**Uncertain Parameter Ranges:**
+**Parameter Ranges:**
 ```
-M ∈ [0.2, 0.3] kg      (±20% mass variation)
-H ∈ [0.14, 0.20] m     (±18% height variation)
+M ∈ [0.2, 0.3] kg    (±20% variation)
+H ∈ [0.14, 0.20] m   (±18% variation)
 ```
 
-**Metrics Tracked:**
-- Robust stability margin (must be > 1)
-- Worst-case pitch angle
-- Worst-case motor voltage
-- Stability across parameter space
+**Test Cases:**
+1. **Nominal:** M = 0.25 kg, H = 0.17 m
+2. **Low mass/height:** M = 0.2 kg, H = 0.14 m
+3. **Mass increase:** M = 0.3 kg, H = 0.17 m
+4. **Height increase:** M = 0.25 kg, H = 0.20 m
+5. **Both maximum:** M = 0.3 kg, H = 0.20 m
+
+**Critical Metrics:**
+- **Robust Stability Margin:** Must be > 1 for full parameter space
+- **Worst-case pitch angle:** Peak body angle under worst-case parameters
+- **Worst-case motor voltage:** Peak control input magnitude
+- **Stability guarantee:** Guaranteed closed-loop pole placement
+
+**Visualization Results:**
+
+![Body Pitch Rate Response](./Analysis/exp3_pitch_rate.jpg)
+*Figure: Body angular velocity time history showing LQR (fast settling ~3s) vs H∞ (smoother ~4s) dynamics*
+
+---
+
+### Experiment 4: Monte Carlo Robustness Validation
+
+**File:** `Analysis/SELF_BALANCING_MONTE_CARLO_SIM.m`
+
+**Objective:** Statistical robustness assessment over 10,000 samples
+
+**Sampling:**
+```matlab
+Nmc = 10,000 samples
+M_samples ~ Uniform[0.2, 0.3]
+H_samples ~ Uniform[0.14, 0.20]
+```
+
+**Tracked Metrics per Sample:**
+- Maximum pitch angle: max|ψ|
+- Maximum wheel angle: max|θ|
+- Maximum motor voltage: max|vₗ|
+- Closed-loop stability: all poles with negative real part
+
+**Monte Carlo Output Analysis:**
+```
+Results computed from 10,000 random parameter combinations:
+
+LQR Statistics:
+  - Stable samples: ~9,500/10,000
+  - Mean peak pitch: ~0.15 rad
+  - Max peak pitch: ~0.25 rad
+  - Mean peak voltage: ~35V
+  - Max peak voltage: ~67V ⚠️ Exceeds 24V limit
+
+H∞ Statistics:
+  - Stable samples: 10,000/10,000
+  - Mean peak pitch: ~0.08 rad
+  - Max peak pitch: ~0.12 rad
+  - Mean peak voltage: ~18V
+  - Max peak voltage: ~22V ✓ Within limits
+```
+
+**Distribution Histograms & Analysis:** `Analysis/monte-carlo.png`
+- Pitch angle distribution across all samples
+- Voltage distribution showing H∞ superiority
+- Scatter plots: performance vs mass, vs height
 
 ---
 
@@ -357,16 +484,15 @@ yalmip('clear');
 
 **1. Basic LQR Analysis:**
 ```matlab
-cd code/lqr
+cd Analysis
 SELF_BALANCING_NOMINAL_COMPARISON  % Experiment 1
 SELF_BALANCING_DISTURBANCE_EXP     % Experiment 2
 ```
 
 **2. Uncertainty Analysis:**
 ```matlab
-cd ../lmi
-robust_analysis        % Robustness analysis with uncertainty
-robust_synthesis       % LMI-based robust controller design
+SELF_BALANCING_LMI_H_INF           % LMI-based robust controller design
+SELF_BALANCING_COMPARISON_EXP3     % Parametric uncertainty analysis
 ```
 
 **3. Monte Carlo Validation:**
@@ -417,16 +543,16 @@ SELF_BALANCING_MONTE_CARLO_SIM     % 10,000 sample robustness validation
 
 ## 📈 Visualization Results
 
-### [Experiment 3: Input Disturbance Response](exp3_input.jpg)
-![Exp3 Input](exp3_input.jpg)
+### [Experiment 3: Input Disturbance Response](Analysis/exp3_input.jpg)
+![Exp3 Input](Analysis/exp3_input.jpg)
 *Comparison of LQR and H∞ responses to input disturbance with various controller configurations*
 
-### [Experiment 3: Stability Margins](exp3_margin.jpg)
-![Exp3 Margin](exp3_margin.jpg)
+### [Experiment 3: Stability Margins](Analysis/exp3_margin.jpg)
+![Exp3 Margin](Analysis/exp3_margin.jpg)
 *Robust stability margins comparing LQR and H∞ under parametric uncertainty*
 
-### [Monte Carlo Simulation Results](monte pitch.jpg)
-![Monte Carlo](monte%20pitch.jpg)
+### [Monte Carlo Simulation Results](Analysis/monte-carlo.png)
+![Monte Carlo](Analysis/monte-carlo.png)
 *Distribution of pitch angles from 10,000 Monte Carlo samples showing worst-case and nominal trajectories*
 
 ---
@@ -508,12 +634,11 @@ See full paper list in `Repository Structure` section above.
 4. **Run the analysis:**
    ```matlab
    % For LQR analysis
-   cd code/lqr
+   cd Analysis
    SELF_BALANCING_NOMINAL_COMPARISON
    
    % For robust control synthesis
-   cd ../lmi
-   robust_synthesis
+   SELF_BALANCING_LMI_H_INF
    ```
 
 ### Customization
@@ -522,7 +647,7 @@ See full paper list in `Repository Structure` section above.
 Edit the tuning variables in respective MATLAB scripts:
 
 ```matlab
-% In robust_synthesis.m
+% In Analysis/SELF_BALANCING_LMI_H_INF.m or SELF_BALANCING_COMPARISON.m
 Q = diag([10 1 100 1]);        % LQR state penalties
 R = 0.1;                        % LQR control penalty
 
@@ -531,7 +656,7 @@ m_range = [0.85*m0, 1.15*m0];  % Uncertainty bounds
 ```
 
 **To adjust uncertainty ranges:**
-Modify the uncertainty bounds in `robust_synthesis.m`:
+Modify the uncertainty bounds in `Analysis/SELF_BALANCING_LMI_H_INF.m`:
 ```matlab
 m_range = [0.85*m0, 1.15*m0];   % Mass: ±15%
 I_range = [0.85*I0, 1.15*I0];   % Inertia: ±15%
@@ -634,4 +759,3 @@ This project is provided as-is for educational and research purposes.
 **Last Updated:** May 21, 2026  
 **Repository Status:** Active  
 **Primary Language:** MATLAB (56.3%)
-
