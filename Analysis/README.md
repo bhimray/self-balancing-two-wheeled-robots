@@ -120,7 +120,13 @@ f(t) = 0.3·sin(t) rad/s² [1 rad/s frequency]
 **Key Insight:**
 H∞ design excels through explicit frequency shaping, while LQR shows sensitivity at disturbance frequency
 
-**Results File:** `exp3_input.jpg`
+**Visualization Results:**
+
+![Input Disturbance Response](./exp3_input.jpg)
+*Figure: Disturbance input signal and system response comparison between LQR and H∞ controllers*
+
+![Wheel Angle Trajectory](./exp3_theta.jpg)
+*Figure: Wheel angle (θ) response over time for both controllers*
 
 ---
 
@@ -148,10 +154,10 @@ H ∈ [0.14, 0.20] m   (±18% variation)
 - **Worst-case motor voltage:** Peak control input magnitude
 - **Stability guarantee:** Guaranteed closed-loop pole placement
 
-**Results Files:**
-- `rob_stab_margin.jpg` - Stability margin bounds
-- `weight_unc.jpg` - Uncertainty weighting visualization
-- `worst-case-psi-volt.jpg` - Worst-case parameter impact
+**Visualization Results:**
+
+![Body Pitch Rate Response](./exp3_pitch_rate.jpg)
+*Figure: Body angular velocity time history showing LQR (fast settling ~3s) vs H∞ (smoother ~4s) dynamics*
 
 ---
 
@@ -192,9 +198,9 @@ H∞ Statistics:
   - Max peak voltage: ~22V ✓ Within limits
 ```
 
-**Distribution Histograms:** `monte-carlo.png`
-- Pitch angle distribution
-- Voltage distribution
+**Distribution Histograms & Analysis:** `monte-carlo.png`
+- Pitch angle distribution across all samples
+- Voltage distribution showing H∞ superiority
 - Scatter plots: performance vs mass, vs height
 
 ---
@@ -313,33 +319,31 @@ B ∈ ℝ²ˣ²   % Motor differential effect
 
 ---
 
-## 🎨 Visualization Results
+## 🎨 Visualization Results Summary
 
 ### **Key Result Plots**
 
-#### `exp3_input.jpg`
-Shows response to sinusoidal disturbance:
-- Compares LQR vs H∞ frequency response
-- Demonstrates superior disturbance rejection of H∞ at design frequency
+#### **Experiment 3 - Disturbance Rejection Analysis**
+The visualization results demonstrate the frequency-dependent characteristics of both controllers under sinusoidal disturbances:
 
-#### `exp3_pitch_rate.jpg`
-Body angular velocity time history:
-- Fast settling for LQR (~3s)
-- Smoother response for H∞ (~4s)
-- Illustrates control trade-offs
+- **exp3_input.jpg** - Disturbance signal and closed-loop response comparison
+- **exp3_theta.jpg** - Wheel angle trajectory showing LQR vs H∞ tracking
+- **exp3_pitch_rate.jpg** - Body pitch rate dynamics highlighting control trade-offs
 
-#### `rob_stab_margin.jpg`
-Robust stability analysis:
-- Shows stability margin > 1 over full parameter space
-- Indicates guaranteed stability for all M ∈ [0.2, 0.3], H ∈ [0.14, 0.20]
-- Both LQR and H∞ remain stable
+**Key Observations:**
+- H∞ controller achieves superior disturbance attenuation through frequency shaping
+- LQR controller exhibits faster nominal settling (±3 seconds) but with aggressive control action
+- H∞ provides smoother, more controlled response maintaining voltage constraints
 
-#### `monte-carlo.png`
-Statistical validation:
-- Distribution of worst-case metrics across 10,000 samples
-- LQR voltage occasionally exceeds 24V (worst-case ~67V)
-- H∞ consistently stays within 24V limit
-- Demonstrates H∞ advantage for practical implementation
+#### **Robustness Analysis Plots**
+- **rob_stab_margin.jpg** - Stability margin visualization across parameter uncertainty space
+- **weight_unc.jpg** - Uncertainty weighting functions and their frequency responses
+- **worst-case-psi-volt.jpg** - Worst-case pitch angle and voltage under parametric variation
+
+#### **Statistical Validation**
+- **monte-carlo.png** - Distribution analysis from 10,000 Monte Carlo samples
+  - LQR: ~95% stability, occasional voltage violations (max 67V)
+  - H∞: 100% stability, voltage always within 24V limit
 
 ---
 
