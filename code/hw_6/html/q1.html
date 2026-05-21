@@ -1,0 +1,857 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>q1</title>
+<meta name="generator" content="MATLAB 24.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-05-12">
+<meta name="DC.source" content="q1.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">1.a</a>
+</li>
+<li>
+<a href="#3">1.b</a>
+</li>
+<li>
+<a href="#4">Transfer function from a</a>
+</li>
+<li>
+<a href="#5">Frequency grid</a>
+</li>
+<li>
+<a href="#6">Search ranges for PI controller</a>
+</li>
+<li>
+<a href="#8">Check closed-loop stability</a>
+</li>
+<li>
+<a href="#9">Gain and phase margins</a>
+</li>
+<li>
+<a href="#10">Sensitivity function</a>
+</li>
+<li>
+<a href="#11">Find bandwidth where <tt>S</tt> crosses -3 dB from below</a>
+</li>
+<li>
+<a href="#12">Store best controller</a>
+</li>
+<li>
+<a href="#14">Plots</a>
+</li>
+<li>
+<a href="#15">1.c mixed sensitivity weights</a>
+</li>
+<li>
+<a href="#16">Sensitivity bound Bs</a>
+</li>
+<li>
+<a href="#17">Control effort bound Bc</a>
+</li>
+<li>
+<a href="#18">Complementary sensitivity bound Bt</a>
+</li>
+<li>
+<a href="#19">Plot design bounds</a>
+</li>
+<li>
+<a href="#20">H-infinity mixed sensitivity synthesis</a>
+</li>
+<li>
+<a href="#21">Closed-loop functions</a>
+</li>
+<li>
+<a href="#22">weighted plots</a>
+</li>
+<li>
+<a href="#23">Check T at 500 Hz</a>
+</li>
+<li>
+<a href="#24">Check DC gain of S</a>
+</li>
+<li>
+<a href="#25">Physical bound plots</a>
+</li>
+<li>
+<a href="#26">1.d</a>
+</li>
+<li>
+<a href="#27">Loop transfer functions</a>
+</li>
+<li>
+<a href="#28">Gain and phase margins</a>
+</li>
+<li>
+<a href="#29">Bode plot of controllers</a>
+</li>
+<li>
+<a href="#30">Bode plot of loop transfer functions</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">clear; clc; close <span class="string">all</span>;
+</pre>
+<h2 id="2">1.a</h2>
+<pre class="codeinput">load(<span class="string">"npresp.mat"</span>, <span class="string">"Gfr"</span>)
+whos
+order = 6;
+
+G = fitfrd(Gfr, order);
+
+G = minreal(tf(G));
+
+disp(<span class="string">'Fitted transfer function G(s):'</span>)
+G
+
+figure;
+bode(Gfr,<span class="string">'b'</span>,G,<span class="string">'r--'</span>);
+grid <span class="string">on</span>;
+legend(<span class="string">'Experimental FRD'</span>,<span class="string">'Fitted G(s)'</span>);
+title([<span class="string">'Nano-positioning Stage: FRD Fit, Order = '</span>, num2str(order)]);
+saveCurrentFigure(<span class="string">'2a_frd_fit'</span>);
+</pre>
+<pre class="codeoutput">  Name      Size            Bytes  Class    Attributes
+
+  Gfr       1x1             43073  frd                
+
+Fitted transfer function G(s):
+
+G =
+ 
+                                                                          
+  0.08876 s^6 - 876.1 s^5 + 1.136e07 s^4 - 4.345e10 s^3 + 4.097e14 s^2    
+                                                                          
+                                                   - 2.095e17 s + 3.082e21
+                                                                          
+  ------------------------------------------------------------------------
+                                                                          
+  s^6 + 1021 s^5 + 7.856e07 s^4 + 5.129e10 s^3 + 1.342e15 s^2 + 3.65e17 s 
+                                                                          
+                                                                + 5.421e21
+                                                                          
+ 
+Continuous-time transfer function.
+</pre>
+<img vspace="5" hspace="5" src="q1_01.png" alt=""> <h2 id="3">1.b</h2>
+<h2 id="4">Transfer function from a</h2>
+<pre class="codeinput">s = tf(<span class="string">'s'</span>);
+
+G = (0.08876*s^6 - 876.1*s^5 + 1.136e7*s^4 - 4.345e10*s^3 <span class="keyword">...</span>
+    + 4.097e14*s^2 - 2.095e17*s + 3.082e21) / <span class="keyword">...</span>
+    (s^6 + 1021*s^5 + 7.856e7*s^4 + 5.129e10*s^3 <span class="keyword">...</span>
+    + 1.342e15*s^2 + 3.65e17*s + 5.421e21);
+
+G = minreal(G);
+</pre>
+<h2 id="5">Frequency grid</h2>
+<pre class="codeinput">w = logspace(-4,6,8000);   <span class="comment">% rad/s</span>
+</pre>
+<h2 id="6">Search ranges for PI controller</h2>
+<pre class="codeinput">Kp_list = logspace(-4,4,200);
+Ki_list = logspace(-2,8,250);
+
+best_bw = -inf;
+best_Kp = NaN;
+best_Ki = NaN;
+best_C  = [];
+
+<span class="keyword">for</span> i = 1:length(Kp_list)
+
+    Kp = Kp_list(i);
+
+    <span class="keyword">for</span> j = 1:length(Ki_list)
+</pre>
+<pre class="codeinput">        Ki = Ki_list(j);
+
+        Cpi = Kp + Ki/s;
+        L = minreal(G*Cpi);
+</pre>
+<h2 id="8">Check closed-loop stability</h2>
+<pre class="codeinput">        CL = feedback(L,1);
+        <span class="keyword">if</span> ~isstable(CL)
+            <span class="keyword">continue</span>;
+        <span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">
+Best PI controller found:
+Kp = 0.164468
+Ki = 378.716
+Bandwidth = 37.163462 Hz
+Gain margin = 1.661270
+Phase margin = 93.707720 deg
+
+CPI =
+ 
+  0.1645 s + 378.7
+  ----------------
+         s
+ 
+Continuous-time transfer function.
+</pre>
+<h2 id="9">Gain and phase margins</h2>
+<pre class="codeinput">        [GM, PM] = margin(L);
+
+        <span class="keyword">if</span> isempty(GM) || isempty(PM) || isnan(GM) || isnan(PM)
+            <span class="keyword">continue</span>;
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span> GM &lt; 1.5 || PM &lt; 75
+            <span class="keyword">continue</span>;
+        <span class="keyword">end</span>
+</pre>
+<h2 id="10">Sensitivity function</h2>
+<pre class="codeinput">        S = feedback(1,L);
+
+        [magS,~,wout] = bode(S,w);
+        magS = squeeze(magS);
+</pre>
+<h2 id="11">Find bandwidth where <tt>S</tt> crosses -3 dB from below</h2>
+<pre class="codeinput">        target = 10^(-3/20);
+
+        idx = find(magS(1:end-1) &lt; target &amp; magS(2:end) &gt;= target, 1, <span class="string">'first'</span>);
+
+        <span class="keyword">if</span> isempty(idx)
+            <span class="keyword">continue</span>;
+        <span class="keyword">end</span>
+
+        wbw = wout(idx);          <span class="comment">% rad/s</span>
+        fbw = wbw/(2*pi);         <span class="comment">% Hz</span>
+</pre>
+<h2 id="12">Store best controller</h2>
+<pre class="codeinput">        <span class="keyword">if</span> fbw &gt; best_bw
+            best_bw = fbw;
+            best_Kp = Kp;
+            best_Ki = Ki;
+            best_C  = Cpi;
+            best_GM = GM;
+            best_PM = PM;
+        <span class="keyword">end</span>
+</pre>
+<pre class="codeinput">    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+fprintf(<span class="string">'\nBest PI controller found:\n'</span>);
+fprintf(<span class="string">'Kp = %.6g\n'</span>, best_Kp);
+fprintf(<span class="string">'Ki = %.6g\n'</span>, best_Ki);
+fprintf(<span class="string">'Bandwidth = %.6f Hz\n'</span>, best_bw);
+fprintf(<span class="string">'Gain margin = %.6f\n'</span>, best_GM);
+fprintf(<span class="string">'Phase margin = %.6f deg\n'</span>, best_PM);
+
+CPI = minreal(best_C)
+
+Lpi = minreal(G*CPI);
+Spi = feedback(1,Lpi);
+Tpi = feedback(Lpi,1);
+</pre>
+<h2 id="14">Plots</h2>
+<pre class="codeinput">figure;
+margin(Lpi);
+grid <span class="string">on</span>;
+title(<span class="string">'PI Loop Transfer Function Margin Plot'</span>);
+saveCurrentFigure(<span class="string">'pi_loop_margin'</span>);
+
+figure;
+bodemag(Spi,{1,1e6});
+grid <span class="string">on</span>;
+yline(-3,<span class="string">'r--'</span>,<span class="string">'-3 dB'</span>);
+title(<span class="string">'Sensitivity Function S for PI Controller'</span>);
+saveCurrentFigure(<span class="string">'pi_sensitivity'</span>);
+
+figure;
+step(feedback(G*CPI,1));
+grid <span class="string">on</span>;
+title(<span class="string">'Closed-loop Step Response with PI Controller'</span>);
+saveCurrentFigure(<span class="string">'pi_step_response'</span>);
+</pre>
+<img vspace="5" hspace="5" src="q1_02.png" alt=""> <img vspace="5" hspace="5" src="q1_03.png" alt=""> <img vspace="5" hspace="5" src="q1_04.png" alt=""> <h2 id="15">1.c mixed sensitivity weights</h2>
+<pre class="codeinput">fbw_des = 250;                 <span class="comment">% desired BW in Hz</span>
+ws = 2*pi*fbw_des;             <span class="comment">% rad/s</span>
+</pre>
+<h2 id="16">Sensitivity bound Bs</h2>
+<pre class="codeinput">As = 1e-4;                     <span class="comment">% low-frequency bound, approx &lt; -80 dB</span>
+Ms = 1.5;                      <span class="comment">% peak sensitivity bound</span>
+
+Bs = (Ms*s + As*ws)/(s + ws);  <span class="comment">% desired upper bound on |S|</span>
+W1 = 1/Bs;                     <span class="comment">% mixsyn uses reciprocal weight</span>
+</pre>
+<h2 id="17">Control effort bound Bc</h2>
+<pre class="codeinput">Bc = 10;                       <span class="comment">% desired upper bound on |C*S|</span>
+W2 = 1/Bc;                     <span class="comment">% = 0.1</span>
+</pre>
+<h2 id="18">Complementary sensitivity bound Bt</h2>
+<pre class="codeinput">ft = 500;                      <span class="comment">% Hz</span>
+wt = 2*pi*ft;
+
+Mt = 1.5;                      <span class="comment">% peak T bound</span>
+At = 0.01;                     <span class="comment">% high-frequency T bound = -40 dB</span>
+
+Bt = (Mt*wt + At*s)/(s + wt);  <span class="comment">% desired upper bound on |T|</span>
+W3 = 1/Bt;                     <span class="comment">% mixsyn reciprocal weight</span>
+</pre>
+<h2 id="19">Plot design bounds</h2>
+<pre class="codeinput">figure;
+bodemag(Bs, Bt, Bc*tf(1), {1,1e6});
+grid <span class="string">on</span>;
+legend(<span class="string">'B_s: upper bound on |S|'</span>, <span class="keyword">...</span>
+    <span class="string">'B_t: upper bound on |T|'</span>, <span class="keyword">...</span>
+    <span class="string">'B_c: upper bound on |CS|'</span>);
+title(<span class="string">'Performance Bounds'</span>);
+saveCurrentFigure(<span class="string">'2c_performance_bounds'</span>);
+</pre>
+<img vspace="5" hspace="5" src="q1_05.png" alt=""> <h2 id="20">H-infinity mixed sensitivity synthesis</h2>
+<pre class="codeinput">[Cinf, CL, gamma] = mixsyn(G,W1,W2,W3);
+Cinf = minreal(Cinf);
+
+fprintf(<span class="string">'\nMixed sensitivity H-infinity controller:\n'</span>);
+Cinf
+fprintf(<span class="string">'\nAchieved gamma = %.6f\n'</span>, gamma);
+</pre>
+<pre class="codeoutput">
+Mixed sensitivity H-infinity controller:
+
+Cinf =
+ 
+  A = 
+               x1          x2          x3          x4          x5          x6
+   x1     -0.1047   1.501e-11   7.589e-12   6.537e-12   1.381e-11   1.023e-11
+   x2   2.778e+05  -1.577e+05  -7.908e+04  -5.973e+04  -1.411e+05  -9.214e+04
+   x3   2.445e+04    2.76e+04        2910  -2.088e+04        2166   -2.49e+04
+   x4  -7.933e-12   3.894e-12        8192   1.826e-12   3.646e-12   2.846e-12
+   x5   -1.12e-11   5.497e-12   2.829e-12        4096   5.147e-12   4.018e-12
+   x6  -1.806e-11   8.863e-12   4.561e-12   4.157e-12        8192   6.478e-12
+   x7   1.079e-12  -5.295e-13  -2.725e-13  -2.483e-13  -4.957e-13        2048
+   x8  -8.752e-12   4.296e-12   2.211e-12   2.015e-12   4.022e-12    3.14e-12
+ 
+               x7          x8
+   x1   8.171e-12   1.796e-11
+   x2  -8.104e+04  -1.566e+05
+   x3       -2940   -4.39e+04
+   x4   2.179e-12   4.917e-12
+   x5   3.077e-12   6.941e-12
+   x6   4.961e-12   1.119e-11
+   x7  -2.963e-13  -6.686e-13
+   x8        2048   5.424e-12
+ 
+  B = 
+               u1
+   x1          32
+   x2   2.435e-15
+   x3  -1.482e-15
+   x4   1.861e-15
+   x5   2.627e-15
+   x6   4.236e-15
+   x7   -2.53e-16
+   x8   2.053e-15
+ 
+  C = 
+           x1      x2      x3      x4      x5      x6      x7      x8
+   y1     382   431.2   61.43  -176.4   57.73  -312.8  -35.81  -612.5
+ 
+  D = 
+       u1
+   y1   0
+ 
+Continuous-time state-space model.
+
+Achieved gamma = 1.029572
+</pre>
+<h2 id="21">Closed-loop functions</h2>
+<pre class="codeinput">Linf = minreal(G*Cinf);
+Sinf = feedback(1,Linf);
+Tinf = feedback(Linf,1);
+CSinf = minreal(Cinf*Sinf);
+</pre>
+<pre class="codeoutput">6 states removed.
+8 states removed.
+</pre>
+<h2 id="22">weighted plots</h2>
+<pre class="codeinput">WS  = minreal(W1*Sinf);
+WCS = minreal(W2*CSinf);
+WT  = minreal(W3*Tinf);
+
+
+fprintf(<span class="string">'Peak |S| = %.4f\n'</span>, norm(Sinf,inf));
+fprintf(<span class="string">'Peak |T| = %.4f\n'</span>, norm(Tinf,inf));
+fprintf(<span class="string">'Peak |C*S| = %.4f\n'</span>, norm(CSinf,inf));
+</pre>
+<pre class="codeoutput">1 state removed.
+1 state removed.
+Peak |S| = 1.3129
+Peak |T| = 0.9999
+Peak |C*S| = 5.4277
+</pre>
+<h2 id="23">Check T at 500 Hz</h2>
+<pre class="codeinput">T_500 = abs(freqresp(Tinf,2*pi*500));
+T_500_db = 20*log10(T_500);
+fprintf(<span class="string">'|T(j2pi500)| = %.4f = %.2f dB\n'</span>, T_500, T_500_db);
+</pre>
+<pre class="codeoutput">|T(j2pi500)| = 0.5204 = -5.67 dB
+</pre>
+<h2 id="24">Check DC gain of S</h2>
+<pre class="codeinput">S0 = abs(evalfr(Sinf,0));
+S0_db = 20*log10(S0);
+fprintf(<span class="string">'|S(0)| = %.4e = %.2f dB\n'</span>, S0, S0_db);
+
+figure;
+bodemag(WS, WCS, WT, {1,1e6});
+grid <span class="string">on</span>;
+yline(0,<span class="string">'k--'</span>,<span class="string">'0 dB bound'</span>);
+legend(<span class="string">'|W_1S|'</span>,<span class="string">'|W_2CS|'</span>,<span class="string">'|W_3T|'</span>,<span class="string">'0 dB'</span>);
+title(<span class="string">'Weighted Mixed-Sensitivity Verification'</span>);
+saveCurrentFigure(<span class="string">'weighted_mixed_sensitivity'</span>);
+</pre>
+<pre class="codeoutput">|S(0)| = 7.6466e-05 = -82.33 dB
+</pre>
+<img vspace="5" hspace="5" src="q1_06.png" alt=""> <h2 id="25">Physical bound plots</h2>
+<pre class="codeinput">figure;
+bodemag(Sinf, Bs, {1,1e6});
+grid <span class="string">on</span>;
+legend(<span class="string">'|S|'</span>,<span class="string">'B_s'</span>);
+title(<span class="string">'Sensitivity vs Bound'</span>);
+saveCurrentFigure(<span class="string">'sensitivity_vs_Bs'</span>);
+
+figure;
+bodemag(Tinf, Bt, {1,1e6});
+grid <span class="string">on</span>;
+legend(<span class="string">'|T|'</span>,<span class="string">'B_t'</span>);
+title(<span class="string">'Complementary Sensitivity vs Bound'</span>);
+saveCurrentFigure(<span class="string">'T_vs_Bt'</span>);
+
+figure;
+bodemag(CSinf, Bc*tf(1), {1,1e6});
+grid <span class="string">on</span>;
+legend(<span class="string">'|C_\infty S|'</span>,<span class="string">'B_c = 10'</span>);
+title(<span class="string">'Control Effort vs Bound'</span>);
+saveCurrentFigure(<span class="string">'CS_vs_Bc'</span>);
+</pre>
+<img vspace="5" hspace="5" src="q1_07.png" alt=""> <img vspace="5" hspace="5" src="q1_08.png" alt=""> <img vspace="5" hspace="5" src="q1_09.png" alt=""> <h2 id="26">1.d</h2>
+<pre class="codeinput">
+<span class="comment">% PI controller from 1(b)</span>
+CPI = (0.217112*s + 0.01)/s;
+</pre>
+<h2 id="27">Loop transfer functions</h2>
+<pre class="codeinput">Lpi   = minreal(G*CPI);
+Linf  = minreal(G*Cinf);
+</pre>
+<pre class="codeoutput">6 states removed.
+</pre>
+<h2 id="28">Gain and phase margins</h2>
+<pre class="codeinput">[GM_pi, PM_pi, Wcg_pi, Wcp_pi] = margin(Lpi);
+[GM_inf, PM_inf, Wcg_inf, Wcp_inf] = margin(Linf);
+
+fprintf(<span class="string">'\n===== PI Controller Margins =====\n'</span>);
+fprintf(<span class="string">'GM_PI = %.4f\n'</span>, GM_pi);
+fprintf(<span class="string">'GM_PI = %.2f dB\n'</span>, 20*log10(GM_pi));
+fprintf(<span class="string">'PM_PI = %.2f deg\n'</span>, PM_pi);
+fprintf(<span class="string">'Gain crossover frequency = %.4f rad/s\n'</span>, Wcp_pi);
+fprintf(<span class="string">'Phase crossover frequency = %.4f rad/s\n'</span>, Wcg_pi);
+
+fprintf(<span class="string">'\n===== H-infinity Controller Margins =====\n'</span>);
+fprintf(<span class="string">'GM_Hinf = %.4f\n'</span>, GM_inf);
+fprintf(<span class="string">'GM_Hinf = %.2f dB\n'</span>, 20*log10(GM_inf));
+fprintf(<span class="string">'PM_Hinf = %.2f deg\n'</span>, PM_inf);
+fprintf(<span class="string">'Gain crossover frequency = %.4f rad/s\n'</span>, Wcp_inf);
+fprintf(<span class="string">'Phase crossover frequency = %.4f rad/s\n'</span>, Wcg_inf);
+</pre>
+<pre class="codeoutput">
+===== PI Controller Margins =====
+GM_PI = 3.6303
+GM_PI = 11.20 dB
+PM_PI = 97.09 deg
+Gain crossover frequency = 0.0057 rad/s
+Phase crossover frequency = 4243.8131 rad/s
+
+===== H-infinity Controller Margins =====
+GM_Hinf = 4.2899
+GM_Hinf = 12.65 dB
+PM_Hinf = 75.18 deg
+Gain crossover frequency = 1367.7529 rad/s
+Phase crossover frequency = 7260.3923 rad/s
+</pre>
+<h2 id="29">Bode plot of controllers</h2>
+<pre class="codeinput">figure;
+bode(CPI,<span class="string">'b'</span>,Cinf,<span class="string">'r--'</span>,{1,1e6});
+grid <span class="string">on</span>;
+legend(<span class="string">'C_{PI}'</span>,<span class="string">'C_{\infty}'</span>);
+title(<span class="string">'Bode Plot of PI and H_{\infty} Controllers'</span>);
+saveCurrentFigure(<span class="string">'controller_bode'</span>);
+</pre>
+<img vspace="5" hspace="5" src="q1_10.png" alt=""> <h2 id="30">Bode plot of loop transfer functions</h2>
+<pre class="codeinput">figure;
+bode(Lpi,<span class="string">'b'</span>,Linf,<span class="string">'r--'</span>,{1,1e6});
+grid <span class="string">on</span>;
+legend(<span class="string">'G C_{PI}'</span>,<span class="string">'G C_{\infty}'</span>);
+title(<span class="string">'Bode Plot of Loop Transfer Functions'</span>);
+saveCurrentFigure(<span class="string">'loop_transfer_bode'</span>);
+</pre>
+<img vspace="5" hspace="5" src="q1_11.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clear; clc; close all;
+
+
+%% 1.a
+load("npresp.mat", "Gfr")
+whos
+order = 6;
+
+G = fitfrd(Gfr, order);
+
+G = minreal(tf(G));
+
+disp('Fitted transfer function G(s):')
+G
+
+figure;
+bode(Gfr,'b',G,'rREPLACE_WITH_DASH_DASH');
+grid on;
+legend('Experimental FRD','Fitted G(s)');
+title(['Nano-positioning Stage: FRD Fit, Order = ', num2str(order)]);
+saveCurrentFigure('2a_frd_fit');
+
+
+%% 1.b
+%% Transfer function from a
+s = tf('s');
+
+G = (0.08876*s^6 - 876.1*s^5 + 1.136e7*s^4 - 4.345e10*s^3 ...
+    + 4.097e14*s^2 - 2.095e17*s + 3.082e21) / ...
+    (s^6 + 1021*s^5 + 7.856e7*s^4 + 5.129e10*s^3 ...
+    + 1.342e15*s^2 + 3.65e17*s + 5.421e21);
+
+G = minreal(G);
+
+%% Frequency grid
+w = logspace(-4,6,8000);   % rad/s
+
+%% Search ranges for PI controller
+Kp_list = logspace(-4,4,200);
+Ki_list = logspace(-2,8,250);
+
+best_bw = -inf;
+best_Kp = NaN;
+best_Ki = NaN;
+best_C  = [];
+
+for i = 1:length(Kp_list)
+    
+    Kp = Kp_list(i);
+    
+    for j = 1:length(Ki_list)
+        
+        Ki = Ki_list(j);
+        
+        Cpi = Kp + Ki/s;
+        L = minreal(G*Cpi);
+        
+        %% Check closed-loop stability
+        CL = feedback(L,1);
+        if ~isstable(CL)
+            continue;
+        end
+        
+        %% Gain and phase margins
+        [GM, PM] = margin(L);
+        
+        if isempty(GM) || isempty(PM) || isnan(GM) || isnan(PM)
+            continue;
+        end
+        
+        if GM < 1.5 || PM < 75
+            continue;
+        end
+        
+        %% Sensitivity function
+        S = feedback(1,L);
+        
+        [magS,~,wout] = bode(S,w);
+        magS = squeeze(magS);
+        
+        %% Find bandwidth where |S| crosses -3 dB from below
+        target = 10^(-3/20);
+        
+        idx = find(magS(1:end-1) < target & magS(2:end) >= target, 1, 'first');
+        
+        if isempty(idx)
+            continue;
+        end
+        
+        wbw = wout(idx);          % rad/s
+        fbw = wbw/(2*pi);         % Hz
+        
+        %% Store best controller
+        if fbw > best_bw
+            best_bw = fbw;
+            best_Kp = Kp;
+            best_Ki = Ki;
+            best_C  = Cpi;
+            best_GM = GM;
+            best_PM = PM;
+        end
+        
+    end
+end
+
+
+fprintf('\nBest PI controller found:\n');
+fprintf('Kp = %.6g\n', best_Kp);
+fprintf('Ki = %.6g\n', best_Ki);
+fprintf('Bandwidth = %.6f Hz\n', best_bw);
+fprintf('Gain margin = %.6f\n', best_GM);
+fprintf('Phase margin = %.6f deg\n', best_PM);
+
+CPI = minreal(best_C)
+
+Lpi = minreal(G*CPI);
+Spi = feedback(1,Lpi);
+Tpi = feedback(Lpi,1);
+
+%% Plots
+figure;
+margin(Lpi);
+grid on;
+title('PI Loop Transfer Function Margin Plot');
+saveCurrentFigure('pi_loop_margin');
+
+figure;
+bodemag(Spi,{1,1e6});
+grid on;
+yline(-3,'rREPLACE_WITH_DASH_DASH','-3 dB');
+title('Sensitivity Function S for PI Controller');
+saveCurrentFigure('pi_sensitivity');
+
+figure;
+step(feedback(G*CPI,1));
+grid on;
+title('Closed-loop Step Response with PI Controller');
+saveCurrentFigure('pi_step_response');
+
+%% 1.c mixed sensitivity weights
+
+fbw_des = 250;                 % desired BW in Hz
+ws = 2*pi*fbw_des;             % rad/s
+
+%% Sensitivity bound Bs
+As = 1e-4;                     % low-frequency bound, approx < -80 dB
+Ms = 1.5;                      % peak sensitivity bound
+
+Bs = (Ms*s + As*ws)/(s + ws);  % desired upper bound on |S|
+W1 = 1/Bs;                     % mixsyn uses reciprocal weight
+
+%% Control effort bound Bc
+Bc = 10;                       % desired upper bound on |C*S|
+W2 = 1/Bc;                     % = 0.1
+
+%% Complementary sensitivity bound Bt
+ft = 500;                      % Hz
+wt = 2*pi*ft;
+
+Mt = 1.5;                      % peak T bound
+At = 0.01;                     % high-frequency T bound = -40 dB
+
+Bt = (Mt*wt + At*s)/(s + wt);  % desired upper bound on |T|
+W3 = 1/Bt;                     % mixsyn reciprocal weight
+
+%% Plot design bounds
+figure;
+bodemag(Bs, Bt, Bc*tf(1), {1,1e6});
+grid on;
+legend('B_s: upper bound on |S|', ...
+    'B_t: upper bound on |T|', ...
+    'B_c: upper bound on |CS|');
+title('Performance Bounds');
+saveCurrentFigure('2c_performance_bounds');
+
+%% H-infinity mixed sensitivity synthesis
+[Cinf, CL, gamma] = mixsyn(G,W1,W2,W3);
+Cinf = minreal(Cinf);
+
+fprintf('\nMixed sensitivity H-infinity controller:\n');
+Cinf
+fprintf('\nAchieved gamma = %.6f\n', gamma);
+
+%% Closed-loop functions
+Linf = minreal(G*Cinf);
+Sinf = feedback(1,Linf);
+Tinf = feedback(Linf,1);
+CSinf = minreal(Cinf*Sinf);
+
+%% weighted plots
+WS  = minreal(W1*Sinf);
+WCS = minreal(W2*CSinf);
+WT  = minreal(W3*Tinf);
+
+
+fprintf('Peak |S| = %.4f\n', norm(Sinf,inf));
+fprintf('Peak |T| = %.4f\n', norm(Tinf,inf));
+fprintf('Peak |C*S| = %.4f\n', norm(CSinf,inf));
+
+%% Check T at 500 Hz
+T_500 = abs(freqresp(Tinf,2*pi*500));
+T_500_db = 20*log10(T_500);
+fprintf('|T(j2pi500)| = %.4f = %.2f dB\n', T_500, T_500_db);
+
+%% Check DC gain of S
+S0 = abs(evalfr(Sinf,0));
+S0_db = 20*log10(S0);
+fprintf('|S(0)| = %.4e = %.2f dB\n', S0, S0_db);
+
+figure;
+bodemag(WS, WCS, WT, {1,1e6});
+grid on;
+yline(0,'kREPLACE_WITH_DASH_DASH','0 dB bound');
+legend('|W_1S|','|W_2CS|','|W_3T|','0 dB');
+title('Weighted Mixed-Sensitivity Verification');
+saveCurrentFigure('weighted_mixed_sensitivity');
+
+%% Physical bound plots
+figure;
+bodemag(Sinf, Bs, {1,1e6});
+grid on;
+legend('|S|','B_s');
+title('Sensitivity vs Bound');
+saveCurrentFigure('sensitivity_vs_Bs');
+
+figure;
+bodemag(Tinf, Bt, {1,1e6});
+grid on;
+legend('|T|','B_t');
+title('Complementary Sensitivity vs Bound');
+saveCurrentFigure('T_vs_Bt');
+
+figure;
+bodemag(CSinf, Bc*tf(1), {1,1e6});
+grid on;
+legend('|C_\infty S|','B_c = 10');
+title('Control Effort vs Bound');
+saveCurrentFigure('CS_vs_Bc');
+
+%% 1.d
+
+% PI controller from 1(b)
+CPI = (0.217112*s + 0.01)/s;
+
+%% Loop transfer functions
+Lpi   = minreal(G*CPI);
+Linf  = minreal(G*Cinf);
+
+%% Gain and phase margins
+
+[GM_pi, PM_pi, Wcg_pi, Wcp_pi] = margin(Lpi);
+[GM_inf, PM_inf, Wcg_inf, Wcp_inf] = margin(Linf);
+
+fprintf('\n===== PI Controller Margins =====\n');
+fprintf('GM_PI = %.4f\n', GM_pi);
+fprintf('GM_PI = %.2f dB\n', 20*log10(GM_pi));
+fprintf('PM_PI = %.2f deg\n', PM_pi);
+fprintf('Gain crossover frequency = %.4f rad/s\n', Wcp_pi);
+fprintf('Phase crossover frequency = %.4f rad/s\n', Wcg_pi);
+
+fprintf('\n===== H-infinity Controller Margins =====\n');
+fprintf('GM_Hinf = %.4f\n', GM_inf);
+fprintf('GM_Hinf = %.2f dB\n', 20*log10(GM_inf));
+fprintf('PM_Hinf = %.2f deg\n', PM_inf);
+fprintf('Gain crossover frequency = %.4f rad/s\n', Wcp_inf);
+fprintf('Phase crossover frequency = %.4f rad/s\n', Wcg_inf);
+
+%% Bode plot of controllers
+
+figure;
+bode(CPI,'b',Cinf,'rREPLACE_WITH_DASH_DASH',{1,1e6});
+grid on;
+legend('C_{PI}','C_{\infty}');
+title('Bode Plot of PI and H_{\infty} Controllers');
+saveCurrentFigure('controller_bode');
+
+%% Bode plot of loop transfer functions
+
+figure;
+bode(Lpi,'b',Linf,'rREPLACE_WITH_DASH_DASH',{1,1e6});
+grid on;
+legend('G C_{PI}','G C_{\infty}');
+title('Bode Plot of Loop Transfer Functions');
+saveCurrentFigure('loop_transfer_bode');
+
+##### SOURCE END #####
+-->
+</body>
+</html>

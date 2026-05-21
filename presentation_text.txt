@@ -1,0 +1,123 @@
+                        ROBUST STABILITY AND PERFORMANCE 
+                         ANALYSIS USING LQR AND í µí°» MIXED-
+                                                   âˆž
+                      SENSITIVITY CONTROL FOR WHEEL ROBOTS
+                                    Bimlendra Ray
+                              University of Texas at Dallas
+                               OBJECTIVES                                            2
+                    NOMINAL PARAMETER                                                3
+                   NOMINAL DYNAMIC MODEL                                                                       4
+                                                          âž¢ Controllability rank: 4
+                                                          âž¢ Observability rank: 4
+                                                          âž¢ Since Controllability and Observability have full rank, it 
+                                                              is controllable and observable
+                   SOURCE OF UNCERTAINTY                                                                        5
+      âž¢ Here, we will discuss these uncertainties
+           âž¢ Payload changes (Parameter variation)
+           âž¢ Height changes  (Parameter variation)
+           âž¢ External disturbances (Input dist.)
+       âž¢ The balancing dynamics are highly sensitive to center-of-
+          mass changes, making robust stabilization necessary
+                   SOURCE OF UNCERTAINTY                                                                    6
+                                                                Robust Objective Then Become:
+                                                                    âž¢ System should remain
+                                                                         âž¢ Stable
+                                                                         âž¢ Bounded
+                                                                         âž¢ Actuator-safe 
+                                                                                                 7
+     ROBUST CONTROL ARCHITECTURE
+                                                                          âž¢ Experiment 2
+                                                                           âž¢ Experiment 3
+   EXPERIMENT 1
+   NOMINAL PLANT 
+   WITH NO 
+   DISTURBANCE
+                                                          LQR CONTROLLER                                                                                                                                 9
+                                                                                                                                             âž¢ It is just nominal controller
+                                                                                                                                             âž¢ no explicit robustness 
+                                                                                                                                                    handling
+                                                                                                                                             âž¢ quadratic optimization
+                                                                                                                                                 âž¢ Initial State:
+                                                                                                                                                                 x0 = [0;
+                                                                                                                                                                         0.3;
+                                                                                                                                                                         0.1;
+                                                                                                                                                                         0.3];
+                                                                                                                                                 âž¢ Goal:
+                                                                                                                                                                 x(10) = [0.0;
+                                                                                                                                                                         0.0;
+                                                                                                                                                                         0.0;
+                                                                                                                                                                         0.0];
+                         LQR CONTROLLER                                             10
+                                           WHY í µí±¯  ?                                                       11
+                                                               âˆž
+       âž¢ LQR limitations:
+            âž¢  No uncertainty guarantee
+            âž¢ No frequency shaping
+                âž¢ Cannot design frequency dependent weight 
+                    function 
+            âž¢ No actuator aware optimization
+                âž¢ Cannot enforce constraints except heavily 
+                    penalizing the input weights
+            âž¢ No worst-case performance guarantee
+     MIXED SENSITIVITY SYNTHESIS 12
+                       The controller minimizes the worst-case closed-loop 
+                       amplification across all frequencies.
+                         âž¢ G: Plant
+                         âž¢ K: Controller
+   MIXED SENSITIVITY WEIGHTS 13
+     INTERPRETATION OF BODE PLOT14
+                              All weighted closed-loop channels satisfy the mixed-
+                              sensitivity specifications
+                    NOMINAL STABILIZATION                                                                  15
+                                                âž¢ Pitch angle 
+                                                âž¢ Motor voltage which is less than 24v
+                              COMPARISON                                            16
+   EXPERIMENT 2
+   WITH INPUT 
+   DISTURBANCE
+                            EXPERIMENT 2                                            18
+   EXPERIMENT 2 COMPARISON 19
+   EXPERIMENT 3
+   WITH 
+   PARAMETRIC 
+   DISTURBANCE
+                               EXPERIMENT 3                                                 21
+                                                âž¢ Both LQR and í µí°» are robustly stable because their 
+                                                                âˆž
+                                                   margins are greater than one.
+                                                âž¢ LQR has a stronger margin, but it requires about 67 V, 
+                                                   which violates the motor limit
+                                                âž¢ í µí°» has a smaller margin but remains actuator-safe under 
+                                                     âˆž
+                                                   all mass and height variations
+                                                âž¢ Hâˆž gamma is:
+                                                                      í µí»¾ = 2
+                                                    So the mixed-sensitivity performance specs are not fully 
+                                                    satisfied at í µí»¾ < 1, but the controller is robustly stable.
+                                                                                    22
+           PITCH RATE
+        âž¢LQR gives tighter pitch stabilization
+        âž¢í µí°»  allows larger transient motion
+          âˆž
+        âž¢Robust controller sacrifices regulation 
+         for actuator safety
+      Presentation title                                                            23
+        INPUT VOLTAGE
+        âž¢LQR requires aggressive motor voltage
+        âž¢í µí°»  maintains actuator-safe behavior
+          âˆž
+        âž¢Control energy significantly reduced
+      Presentation title                                                            24
+              ROBUST 
+            STABILITY
+        âž¢LQR has larger stability margin
+        âž¢í µí°»  remains robustly stable
+          âˆž
+        âž¢í µí°»  prioritizes practical implementation
+          âˆž
+      Presentation title                                                            25
+         MONTE-CARLO 
+           SIMULATION
+        âž¢L
+              THANK YOU
+                 Any Question ?
